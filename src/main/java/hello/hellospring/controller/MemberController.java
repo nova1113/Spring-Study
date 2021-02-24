@@ -4,8 +4,11 @@ import hello.hellospring.Service.MemberService;
 import hello.hellospring.domain.Member;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+
+import java.util.List;
 
 @Controller
 public class MemberController {
@@ -22,7 +25,7 @@ public class MemberController {
         return "members/createMemberForm";
     }
 
-    @PostMapping("members/new")
+    @PostMapping("/members/new")
     public String create(MemberForm form){
         /* Member를 사용해도 되지만 MemberForm을 만드는 이유
          * Member에는 Member Table에 필요한 정보를 넣어 주지만
@@ -36,5 +39,12 @@ public class MemberController {
         memberService.join(member);
 
         return "redirect:/";
+    }
+
+    @GetMapping("/members")
+    public String list(Model model){
+        List<Member> members = memberService.findMembers();
+        model.addAttribute("members", members);
+        return "members/memberList";
     }
 }
